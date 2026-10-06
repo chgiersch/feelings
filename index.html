@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Feelings Field Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="A color-coded guide to naming your feelings, with deep dives into more specific words, what each feeling may be asking for, something to try, and a private log.">
+<meta name="theme-color" content="#FFFDF9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#171614" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-512.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Feelings">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Lexend:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: face quick-jump row, then one light-tinted drawer per family; the deep dive is a slide-up sheet on phones and a right-hand panel on wide screens. */
+:root{
+  --bg:#FFFDF9; --surface:#FFFFFF; --fg:#1F1D1A; --muted:#625C52; --line:#ECE6DA; --mix:#000; --scrim:rgba(20,18,15,.38); --danger:#B4261E;
+  --font:"Lexend",ui-rounded,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --disp:"Fredoka",ui-rounded,system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#171614; --surface:#211F1C; --fg:#F2EEE6; --muted:#B4AC9F; --line:#34302A; --mix:#fff; --scrim:rgba(0,0,0,.55); --danger:#FF8A80; color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#171614; --surface:#211F1C; --fg:#F2EEE6; --muted:#B4AC9F; --line:#34302A; --mix:#fff; --scrim:rgba(0,0,0,.55); --danger:#FF8A80; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+button:focus-visible,input:focus-visible{outline:3px solid var(--fg);outline-offset:2px;border-radius:8px}
+.fam,.detail,.res,.bar,.entry{--t:color-mix(in srgb,var(--a) 13%,var(--bg));--t2:color-mix(in srgb,var(--a) 6%,var(--bg));--k:color-mix(in srgb,var(--a) 36%,var(--mix))}
+
+.app{height:100%;display:grid;grid-template-columns:minmax(0,1fr)}
+@media (min-width:820px){.app{grid-template-columns:minmax(360px,480px) minmax(0,1fr)}}
+
+/* ---------- list ---------- */
+.list{overflow-y:auto;min-width:0;padding-bottom:40px}
+.top{padding:20px 20px 10px;display:flex;flex-direction:column;gap:12px}
+.top h1{margin:0;font-family:var(--disp);font-size:32px;line-height:1.05;font-weight:600}
+.search{display:flex;align-items:center;gap:10px;background:color-mix(in srgb,var(--fg) 6%,var(--bg));border-radius:12px;padding:0 14px}
+.search input{flex:1;min-width:0;font:inherit;font-size:17px;padding:12px 0;border:0;background:transparent;color:var(--fg);outline:none}
+.search input::placeholder{color:var(--muted)}
+.search:focus-within{outline:3px solid var(--fg);outline-offset:2px}
+
+.faces{position:sticky;top:0;z-index:3;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:8px 14px 12px;scrollbar-width:none;border-bottom:1px solid var(--line)}
+.faces::-webkit-scrollbar{display:none}
+.fbtn{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--muted);min-width:56px;padding:2px 0}
+.fbtn .face{width:44px;height:44px;border-radius:50%;outline:2px solid transparent;outline-offset:2px}
+.fbtn.on{color:var(--fg)}
+.fbtn.on .face{outline-color:var(--fg)}
+
+.fams{display:flex;flex-direction:column;gap:2px}
+.fhead{width:100%;display:flex;align-items:center;gap:14px;background:var(--t);padding:16px 20px;scroll-margin-top:84px}
+.fhead .face{width:48px;height:48px;flex:none}
+.fname{display:block;margin:0;font-family:var(--disp);font-size:36px;line-height:1;font-weight:600;color:var(--k)}
+.fmsg{display:block;margin:5px 0 0;font-size:15px;color:var(--k);line-height:1.3}
+.chev{margin-left:auto;flex:none;width:22px;height:22px;transition:transform .2s ease;color:var(--k)}
+.fam.open .chev{transform:rotate(90deg)}
+.drawer{background:var(--t2);padding:2px 20px 10px}
+.sub{padding:14px 0 16px;border-top:1px solid color-mix(in srgb,var(--a) 18%,var(--bg));display:flex;flex-direction:column;gap:4px}
+.sub:first-child{border-top:0}
+.blab{margin:14px 0 2px;font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--k)}
+.blab+.sub{border-top:0}
+.sname{display:inline-flex;align-items:center;gap:8px;font-family:var(--disp);font-size:22px;font-weight:600;color:var(--k);align-self:flex-start;padding:2px 0;min-height:32px}
+.dots{display:inline-flex;gap:3px}
+.dots i{display:block;width:7px;height:7px;border-radius:50%;background:var(--k);opacity:.2}
+.dots i.on{opacity:.9}
+.words{display:flex;flex-wrap:wrap;gap:6px 18px;line-height:1.4}
+.w{font-size:20px;color:var(--fg);padding:2px 0;border-radius:6px}
+.w:hover{color:var(--k);text-decoration:underline;text-underline-offset:3px}
+.w.sel{color:var(--k);font-weight:700;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.foot{font-size:13px;color:var(--muted);line-height:1.45;padding:18px 20px 0}
+
+.results{display:flex;flex-direction:column}
+.res{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 20px;border-bottom:1px solid var(--line);width:100%}
+.res b{font-size:17px}
+.res small{color:var(--k);font-size:13px;font-weight:600;text-align:right}
+.empty{color:var(--muted);font-size:16px;padding:24px 20px}
+
+.toprow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.help{border:0;padding:0;max-width:min(520px,calc(100vw - 32px));width:100%;max-height:calc(100% - 48px);border-radius:24px;background:var(--bg);color:var(--fg);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.help::backdrop{background:rgba(20,18,15,.45)}
+.hwrap{padding:22px 22px 26px;display:flex;flex-direction:column;gap:18px}
+.hrow{display:flex;align-items:center;justify-content:space-between}
+.hrow h2{margin:0;font-family:var(--disp);font-size:28px;font-weight:600}
+.hclose{font-weight:600;min-height:44px;min-width:44px;display:flex;align-items:center;justify-content:flex-end}
+.steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:12px;font-size:16px;line-height:1.45}
+.steps li::marker{font-weight:800}
+.hd{display:inline-flex;gap:2px;vertical-align:middle}
+.hd i{display:block;width:6px;height:6px;border-radius:50%;background:var(--fg);opacity:.2}
+.hd i.on{opacity:.85}
+.htips{display:flex;flex-direction:column;gap:10px;font-size:15px;line-height:1.45}
+.htips p{margin:0}
+.hnote{margin:0;font-size:14px;line-height:1.45;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+
+.tools{display:flex;gap:2px;margin-right:-10px}
+.tool{position:relative;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;color:var(--muted)}
+.tool:hover{color:var(--fg)}
+.badge{position:absolute;top:4px;right:2px;min-width:18px;height:18px;padding:0 5px;box-sizing:border-box;border-radius:9px;background:var(--fg);color:var(--bg);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.hsec{display:flex;flex-direction:column;gap:10px;padding-top:16px;border-top:1px solid var(--line)}
+.hsec h3{margin:0;font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.hp{margin:0;font-size:15px;line-height:1.45}
+.hp:empty{display:none}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:color-mix(in srgb,var(--fg) 7%,var(--bg));border-radius:12px;padding:4px;gap:4px}
+.seg button{text-align:center;padding:10px 0;border-radius:9px;font-weight:600;font-size:15px;color:var(--muted);min-height:40px}
+.seg button[aria-pressed="true"]{background:var(--bg);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.hbtns{display:flex;flex-wrap:wrap;gap:8px}
+.pill{border:1.5px solid var(--line);border-radius:999px;padding:9px 16px;font-weight:600;min-height:44px}
+.pill.danger{color:var(--danger)}
+.fallback{width:100%;min-height:140px;font:inherit;font-size:14px;border:1.5px solid var(--line);border-radius:12px;padding:10px;background:var(--surface);color:var(--fg);box-sizing:border-box}
+
+.logbox{margin-top:6px;display:flex;flex-direction:column;gap:10px}
+.logbtn{align-self:flex-start;background:var(--k);color:var(--bg);font-weight:600;border-radius:999px;padding:10px 18px;min-height:44px;display:flex;align-items:center;gap:8px}
+.logbox textarea{width:100%;box-sizing:border-box;min-height:84px;font:inherit;font-size:16px;border:1.5px solid color-mix(in srgb,var(--a) 40%,var(--bg));border-radius:14px;padding:10px 12px;background:var(--bg);color:var(--fg);resize:vertical}
+.logrow{display:flex;gap:8px;flex-wrap:wrap}
+.ghost{color:var(--k);font-weight:600;padding:10px 6px;min-height:44px}
+.logged{margin:0;font-size:15px;font-weight:600;color:var(--k);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.logged button{text-decoration:underline;text-underline-offset:3px;font-weight:600;color:var(--k)}
+
+.lsum{display:flex;flex-direction:column;gap:8px}
+.lsum h3,.lday h3{margin:0;font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.bar{display:grid;grid-template-columns:96px minmax(0,1fr) 28px;align-items:center;gap:10px;font-size:15px}
+.bar span:first-child{font-weight:600;color:var(--k)}
+.track{height:12px;border-radius:6px;background:color-mix(in srgb,var(--fg) 6%,var(--bg));overflow:hidden}
+.track i{display:block;height:100%;border-radius:6px;background:var(--a)}
+.bar .n{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.lday{display:flex;flex-direction:column;gap:2px;padding-top:14px}
+.entry{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid var(--line)}
+.entry .pip{width:12px;height:12px;border-radius:50%;background:var(--a);margin-top:6px}
+.entry .main{display:flex;flex-direction:column;gap:2px;min-width:0}
+.entry .ew{font-size:18px;font-weight:700;color:var(--fg);align-self:flex-start}
+.entry .em{font-size:13px;color:var(--muted)}
+.entry .en{margin:4px 0 0;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
+.entry .rm{font-size:13px;color:var(--muted);padding:6px 0 6px 8px;min-height:32px}
+.entry .rm.armed{color:var(--danger);font-weight:700}
+.lempty{margin:0;font-size:16px;line-height:1.5;color:var(--muted)}
+
+/* ---------- deep dive ---------- */
+.scrim{display:none}
+.detail{background:var(--bg);overflow-y:auto;min-width:0;border-left:1px solid var(--line)}
+@media (max-width:819px){
+  .scrim{display:block;position:fixed;inset:0;z-index:9;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity .25s ease}
+  .app.open .scrim{opacity:1;pointer-events:auto}
+  .detail{position:fixed;left:0;right:0;bottom:0;top:calc(env(safe-area-inset-top,0px) + 56px);z-index:10;border-left:0;border-radius:26px 26px 0 0;transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .app.open .detail{transform:none}
+}
+@media (min-width:820px){.grab,.close{display:none!important}}
+@media (prefers-reduced-motion:reduce){.detail,.scrim,.chev{transition:none}}
+.grab{display:block;width:40px;height:5px;border-radius:3px;background:var(--line);margin:10px auto 0}
+.dhead{background:var(--t);padding:18px 22px 20px;display:flex;flex-direction:column;gap:8px;margin-top:10px}
+@media (min-width:820px){.dhead{margin-top:0;padding-top:28px}}
+.crumb{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--k);font-weight:600;font-size:15px}
+.crumb span{display:flex;align-items:center;gap:8px}
+.crumb .face{width:28px;height:28px}
+.close{font-weight:600;color:var(--k);min-height:44px;min-width:44px;display:flex;align-items:center;justify-content:flex-end}
+.dhead h2{margin:0;font-family:var(--disp);font-size:46px;line-height:1;font-weight:600;color:var(--k);text-wrap:balance}
+.dhead .gloss{margin:0;font-size:18px;color:var(--k);line-height:1.35}
+.dbody{padding:20px 22px 48px;display:flex;flex-direction:column;gap:24px;max-width:640px}
+.voice{margin:0;font-size:19px;line-height:1.4;font-style:italic;color:var(--k)}
+.voice::before{content:"\201C"}.voice::after{content:"\201D"}
+.sec{display:flex;flex-direction:column;gap:8px}
+.sec h3{margin:0;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--k);font-weight:700}
+.dl{display:flex;flex-direction:column}
+.dw{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:7px 0;min-height:40px;width:100%}
+.dw b{font-size:19px;font-weight:600;color:var(--fg)}
+.dw span{font-size:15px;color:var(--muted)}
+.dw.sel b{color:var(--k);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.needs{margin:0;font-size:17px;font-weight:600}
+.try{margin:0;font-size:17px;line-height:1.45}
+.nav{display:flex;flex-wrap:wrap;gap:8px}
+.nav button{border:1.5px solid var(--line);border-radius:999px;padding:9px 14px;font-weight:600;min-height:44px;display:flex;align-items:center;gap:8px;color:var(--k)}
+.jump{color:var(--k);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+</style>
+
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <section class="list" id="list" aria-label="Feeling families">
+    <div class="top">
+      <div class="toprow"><h1>How am I feeling?</h1>
+        <div class="tools">
+          <button class="tool" id="open-log" aria-label="Your feelings log"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2.5"/><path d="M9 8.5h6M9 12h6M9 15.5h3.5"/></svg><span class="badge" id="log-count" hidden></span></button>
+          <button class="tool" id="open-settings" aria-label="Settings and help"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/></svg></button>
+        </div>
+      </div>
+      <label class="search" for="q">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" style="color:var(--muted)"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+        <input id="q" type="search" placeholder="Search a feeling" autocomplete="off" aria-label="Search feelings">
+      </label>
+    </div>
+    <nav class="faces" id="faces" aria-label="Jump to a feeling family"></nav>
+    <div id="results" class="results" hidden></div>
+    <div id="fams" class="fams"></div>
+    <p class="foot">No feeling is wrong. Each one carries a message about what you need. If intense feelings ever feel like too much, reach out to someone you trust, or call or text 988 in the US.</p>
+  </section>
+  <div class="scrim" id="scrim"></div>
+  <dialog class="help" id="settings" aria-labelledby="settings-title">
+    <div class="hwrap">
+      <div class="hrow"><h2 id="settings-title">Settings &amp; help</h2><button class="hclose" data-close>Done</button></div>
+
+      <section class="hsec">
+        <h3>Appearance</h3>
+        <div class="seg" role="group" aria-label="Color theme">
+          <button data-theme-choice="system" aria-pressed="true">System</button>
+          <button data-theme-choice="light" aria-pressed="false">Light</button>
+          <button data-theme-choice="dark" aria-pressed="false">Dark</button>
+        </div>
+      </section>
+
+      <section class="hsec">
+        <h3>How to use</h3>
+        <ol class="steps">
+          <li><b>Find the family.</b> Tap a face along the top, or tap any colored row to open it.</li>
+          <li><b>Pick the closest word.</b> Each family has three groups, from mild <span class="hd"><i class="on"></i><i></i><i></i></span> to intense <span class="hd"><i class="on"></i><i class="on"></i><i class="on"></i></span>.</li>
+          <li><b>Go deeper.</b> Tap any word to see more specific words, what the feeling may be asking for, and one small thing to try.</li>
+          <li><b>Log it if you like.</b> Tap Log this feeling to save it with an optional note, then see patterns in your log.</li>
+        </ol>
+        <div class="htips">
+          <p><b>More than one fits?</b> That's normal. You can feel relieved and sad at the same time. Log each one.</p>
+          <p><b>Not sure what you feel?</b> Start with Body at the end of the list. Notice where something shows up physically, then follow its links to the feelings it often goes with.</p>
+          <p><b>Search</b> finds any of the 450+ words and takes you to where it lives.</p>
+          <p><b>Keep it on your phone.</b> iPhone or iPad: in Safari, tap Share, then Add to Home Screen. Android: in Chrome, tap the ⋮ menu, then Add to Home screen.</p>
+        </div>
+      </section>
+
+      <section class="hsec">
+        <h3>Your log</h3>
+        <p class="hp">Your log is saved only on this device. Nobody else can see it, including whoever shared this guide with you. Clearing your browser data erases it, so copy it somewhere if you want to keep it.</p>
+        <div class="hbtns">
+          <button class="pill" id="copy-log">Copy log as text</button>
+          <button class="pill danger" id="clear-log">Clear log</button>
+        </div>
+        <p class="hp" id="log-msg" role="status"></p>
+        <textarea id="log-fallback" class="fallback" readonly hidden aria-label="Log as text"></textarea>
+      </section>
+
+      <section class="hsec">
+        <h3>About</h3>
+        <p class="hp">Inspired by Abby VanMuijen's feelings wheel (@avanmuijen) and the feelings lists of Nonviolent Communication and the Hoffman Institute.</p>
+        <p class="hp">No feeling is wrong. Each one carries a message about what you need. If intense feelings ever feel like too much, reach out to someone you trust, or call or text 988 in the US.</p>
+      </section>
+    </div>
+  </dialog>
+
+  <dialog class="help" id="logd" aria-labelledby="log-title">
+    <div class="hwrap">
+      <div class="hrow"><h2 id="log-title">Your log</h2><button class="hclose" data-close>Done</button></div>
+      <div id="log-body"></div>
+    </div>
+  </dialog>
+  <section class="detail" id="detail" aria-label="Feeling details" aria-live="polite"></section>
+</div>
+
+<script>
+const FACES={
+joy:'<path d="M18 28q4-6 8 0"/><path d="M38 28q4-6 8 0"/><path d="M18 38q14 16 28 0"/>',
+loving:'<path d="M18 29q4-5 8 0"/><path d="M38 29q4-5 8 0"/><path d="M22 40q10 9 20 0"/>',
+peaceful:'<path d="M17 30q5 4 10 0"/><path d="M37 30q5 4 10 0"/><path d="M25 42q7 4 14 0"/>',
+strong:'<path d="M17 22l9 2"/><path d="M47 22l-9 2"/><circle cx="23" cy="30" r="1.5"/><circle cx="41" cy="30" r="1.5"/><path d="M21 40q11 9 22 0"/>',
+tired:'<path d="M17 30h10"/><path d="M37 30h10"/><path d="M24 43h16"/><path d="M45 8h7l-7 8h7" stroke-width="2.5"/>',
+confused:'<path d="M17 21q5-4 10-1"/><path d="M38 25h9"/><circle cx="22" cy="30" r="1.5"/><circle cx="42" cy="31" r="1.5"/><path d="M21 43q4-4 7 0t7 0t7 0"/>',
+sad:'<path d="M17 24l8-3"/><path d="M47 24l-8-3"/><circle cx="23" cy="31" r="1.5"/><circle cx="41" cy="31" r="1.5"/><path d="M22 47q10-9 20 0"/>',
+afraid:'<path d="M16 20q5-4 10 0"/><path d="M38 20q5-4 10 0"/><circle cx="22" cy="29" r="4"/><circle cx="42" cy="29" r="4"/><ellipse cx="32" cy="44" rx="5" ry="6"/>',
+angry:'<path d="M16 22l11 5"/><path d="M48 22l-11 5"/><circle cx="23" cy="32" r="1.5"/><circle cx="41" cy="32" r="1.5"/><path d="M21 46q11-7 22 0"/>',
+ashamed:'<path d="M17 32q5 4 10 0"/><path d="M37 32q5 4 10 0"/><path d="M26 46q3-3 6 0t6 0"/>',
+body:'<circle cx="32" cy="17" r="5"/><path d="M32 23v18"/><path d="M22 30l10-4 10 4"/><path d="M32 41l-7 12"/><path d="M32 41l7 12"/>'
+};
+function face(id,a){return `<svg class="face" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29" fill="${a}"/><g fill="none" stroke="color-mix(in srgb, ${a} 30%, #000)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">${FACES[id]}</g></svg>`}
+
+// [tier name, list words, sounds like, [[deeper word, gloss]...], needs, try]
+const D=[
+{id:'joy',name:'Joy',a:'#F2B705',msg:'This matters. Savor it, share it.',tiers:[
+ ['Content',['glad','pleased','satisfied','fulfilled','lighthearted','fortunate'],"This is good. I don't need anything more right now.",[['at ease','nothing is pulling at you'],['satisfied','a need just got met'],['fulfilled','something meaningful came through'],['glad','a light, simple yes'],['pleased','it went the way you hoped'],['lighthearted','worries feel lighter'],['fortunate','aware of your good luck'],['cozy','warm, safe and comfortable']],['rest','appreciation','savoring'],'Pause for ten seconds and let it really register.'],
+ ['Playful',['cheerful','amused','silly','giddy','delighted','merry','frisky'],"Let's have fun with this.",[['amused','something tickled you'],['silly','free to be goofy'],['giddy','bubbly, a little dizzy with fun'],['cheerful','bright and upbeat'],['delighted','pleasantly surprised'],['merry','festive, shared good cheer'],['frisky','restless with fun energy'],['mischievous','itching to play a trick']],['play','connection','spontaneity'],'Invite someone into it.'],
+ ['Elated',['joyful','ecstatic','exhilarated','jubilant','radiant','blissful','free'],"I can't believe how good this is!",[['joyful','deep, full-body gladness'],['ecstatic','overflowing, beyond words'],['exhilarated','thrilled and charged up'],['jubilant','celebrating a win'],['radiant','glowing outward'],['blissful','complete, untroubled joy'],['free','unburdened and expansive'],['euphoric','an intense, almost dizzy high']],['celebration','expression','sharing'],'Mark the moment. Tell someone or write it down.']]},
+{id:'loving',name:'Loving',a:'#E26A95',msg:'Connection is here. Lean in.',tiers:[
+ ['Warm',['friendly','caring','kind','appreciative','thankful','supportive'],"I like you and I'm glad you're here.",[['friendly','easy goodwill'],['caring','wanting good things for them'],['kind','gentle in how you act'],['appreciative','noticing what they bring'],['thankful','grateful for something specific'],['supportive','wanting to back them up'],['fond','a soft spot for someone'],['welcoming','making room for others']],['connection','kindness','reciprocity'],'Say one specific thing you appreciate about them.'],
+ ['Close',['affectionate','tender','intimate','open-hearted','trusting','belonging'],"I feel safe letting you in.",[['affectionate','wanting touch or closeness'],['tender','soft, gentle, protective'],['intimate','deeply known, and knowing'],['open-hearted','guard down, available'],['trusting','sure they will be careful with you'],['belonging','part of something'],['seen','understood as you are'],['connected','a felt thread between you']],['intimacy','trust','being seen'],'Share something a little more real than usual.'],
+ ['Devoted',['adoring','compassionate','grateful','moved','cherished','blessed'],"You matter to me more than I can say.",[['adoring','full of admiration and love'],['compassionate','moved by another’s pain'],['grateful','deep thanks for what was given'],['moved','stirred to the core'],['cherished','held as precious'],['blessed','sensing a gift beyond deserving'],['reverent','love mixed with deep respect'],['committed','choosing them again and again']],['meaning','devotion','expression'],'Let it show in an action, not only a thought.']]},
+{id:'peaceful',name:'Peaceful',a:'#2FA59A',msg:'Things are okay. Rest here.',tiers:[
+ ['Calm',['relaxed','quiet','mellow','comfortable','restful','still'],"Nothing needs fixing right now.",[['relaxed','body loosened'],['quiet','inner noise turned down'],['mellow','easygoing, soft-edged'],['comfortable','okay in body and mind'],['restful','recharging'],['still','movement settles'],['unhurried','time feels roomy'],['soothed','something eased the tension']],['rest','quiet','space'],'Notice three slow breaths.'],
+ ['Centered',['balanced','present','grounded','patient','accepting','safe'],"I'm here, and I'm okay with what is.",[['balanced','not tipped either way'],['present','attention in the now'],['grounded','feet on the floor, solid'],['patient','fine letting it unfold'],['accepting','not fighting reality'],['safe','no threat in sight'],['clear','mind uncluttered'],['steady','even and reliable']],['stability','presence','acceptance'],'Name one thing you can feel, one you can see, and one you can hear.'],
+ ['Serene',['tranquil','equanimous','relieved','spacious','at ease','whole'],"All is well.",[['tranquil','deep, still water'],['equanimous','even through ups and downs'],['relieved','a weight just lifted'],['spacious','lots of room inside'],['at ease','effortless okayness'],['whole','nothing missing'],['content','quietly satisfied'],['awed','quiet wonder at it all']],['peace','meaning','spaciousness'],'Stay with it a moment longer than feels natural.']]},
+{id:'strong',name:'Strong',a:'#F07C1F',msg:'You have energy to act. Use it.',tiers:[
+ ['Engaged',['interested','curious','alert','involved','absorbed','willing'],"I want to know more.",[['interested','attention drawn in'],['curious','wanting to explore'],['alert','awake and attentive'],['involved','part of the action'],['absorbed','lost in the task'],['willing','open to trying'],['fascinated','captivated by something'],['eager','leaning forward']],['learning','stimulation','contribution'],'Follow the thread for fifteen more minutes.'],
+ ['Confident',['capable','assured','focused','motivated','determined','proud'],"I can handle this.",[['capable','you have the skills'],['assured','sure of your footing'],['focused','attention locked in'],['motivated','you have a reason to move'],['determined','committed to finishing'],['proud','good about what you did'],['competent','doing it well'],['secure','not easily shaken']],['competence','progress','recognition'],'Pick the next concrete step and do it now.'],
+ ['Empowered',['inspired','brave','bold','passionate','invigorated','in flow'],"Nothing's going to stop me.",[['inspired','lit up by an idea'],['brave','acting despite fear'],['bold','willing to take up space'],['passionate','fire for something'],['invigorated','freshly energized'],['in flow','time disappears'],['courageous','facing what is hard'],['unstoppable','momentum feels endless']],['purpose','autonomy','challenge'],'Channel it into one meaningful thing before it fades.']]},
+{id:'tired',name:'Tired',a:'#8FA382',msg:'Your tank is low. Rest and refill.',tiers:[
+ ['Low',['sluggish','bored','sleepy','weary','listless','flat'],"I just don't have much in me today.",[['sluggish','slow to get going'],['bored','nothing holds your interest'],['sleepy','your body wants sleep'],['weary','tired from carrying something'],['listless','no spark'],['flat','feelings muted'],['unmotivated','can’t find the why'],['restless','tired but can’t settle']],['rest','stimulation','meaning'],'Change one thing: light, movement, or a glass of water.'],
+ ['Drained',['fatigued','stressed','frazzled','burnt out','worn down','foggy'],"I've been running on empty.",[['fatigued','deep physical tiredness'],['stressed','too much pressure'],['frazzled','frayed at the edges'],['burnt out','long-term depletion'],['worn down','slowly eroded'],['foggy','thinking is slow'],['overextended','said yes too many times'],['spent','nothing left to give']],['rest','boundaries','support'],'Cancel or delay one thing today.'],
+ ['Empty',['exhausted','depleted','numb','apathetic','vacant','withdrawn'],"I can't feel much of anything.",[['exhausted','completely used up'],['depleted','reserves gone'],['numb','feelings switched off'],['apathetic','nothing seems to matter'],['vacant','checked out'],['withdrawn','pulling away from people'],['detached','watching from a distance'],['hollow','an empty space inside']],['deep rest','care','connection'],'Tell one person how low your tank is.']]},
+{id:'confused',name:'Confused',a:'#3A9AD9',msg:'Slow down. Gather more info.',tiers:[
+ ['Unsure',['hesitant','questioning','undecided','puzzled','hazy','guarded'],"I don't know yet.",[['hesitant','holding back from deciding'],['questioning','lots of open questions'],['undecided','options still open'],['puzzled','it doesn’t add up'],['hazy','not quite clear'],['guarded','careful before trusting'],['ambivalent','pulled two ways a little'],['doubtful','suspecting it won’t work']],['information','time','clarity'],'Write down the one question you most need answered.'],
+ ['Torn',['conflicted','disoriented','scattered','mixed-up','overloaded','uneasy'],"Part of me wants this, part of me wants that.",[['conflicted','two values clashing'],['disoriented','lost your bearings'],['scattered','attention in pieces'],['mixed-up','signals crossed'],['overloaded','too much input'],['uneasy','something feels off'],['indecisive','can’t land on a choice'],['distracted','pulled away again and again']],['clarity','priorities','space'],'Let each part say what it is trying to protect.'],
+ ['Lost',['bewildered','baffled','dazed','stunned','mystified','disillusioned'],"I have no idea what's happening.",[['bewildered','thrown off completely'],['baffled','can’t make sense of it'],['dazed','stunned and slow'],['stunned','frozen by surprise'],['mystified','deeply puzzled'],['disillusioned','a belief fell apart'],['adrift','no direction'],['shocked','hit by the unexpected']],['orientation','support','safety'],'Ground yourself first. Decide later.']]},
+{id:'sad',name:'Sad',a:'#4A62C9',msg:'Something mattered. Let it be felt.',tiers:[
+ ['Down',['disappointed','blue','gloomy','wistful','lonely','left out'],"This isn't how I hoped it would be.",[['disappointed','a hope wasn’t met'],['blue','a low, gray mood'],['gloomy','heavy and dim'],['wistful','longing for what was'],['lonely','missing connection'],['left out','not included'],['nostalgic','aching for the past'],['glum','quietly unhappy']],['comfort','connection','acknowledgment'],'Name what you were hoping for.'],
+ ['Hurt',['discouraged','dejected','melancholy','longing','let down','rejected'],"That really got to me.",[['discouraged','lost some heart'],['dejected','knocked down'],['melancholy','lingering, reflective sadness'],['longing','aching for someone or something'],['let down','someone didn’t come through'],['rejected','pushed away'],['wounded','a sore spot got hit'],['misunderstood','not seen accurately']],['understanding','repair','care'],'Say to yourself: of course this hurts.'],
+ ['Grieving',['heartbroken','devastated','despairing','bereaved','hopeless','forlorn'],"Something important is gone.",[['heartbroken','love met loss'],['devastated','flattened by it'],['despairing','hope feels gone'],['bereaved','grieving a death'],['hopeless','can’t see a way through yet'],['forlorn','alone and abandoned'],['anguished','sharp, intense pain'],['inconsolable','nothing reaches it yet']],['comfort','time','company'],'Let someone sit with you. You don’t need to explain.']]},
+{id:'afraid',name:'Afraid',a:'#A13D8E',msg:'Look for safety and support.',tiers:[
+ ['Uneasy',['nervous','worried','cautious','wary','edgy','unsettled'],"Something doesn't feel right.",[['nervous','jittery anticipation'],['worried','mind circling a problem'],['cautious','moving carefully'],['wary','watching for danger'],['edgy','on edge, quick to react'],['unsettled','not at rest'],['apprehensive','bracing for what’s next'],['concerned','caring about a risk']],['information','reassurance','predictability'],'Ask yourself: what is the actual risk here?'],
+ ['Anxious',['insecure','apprehensive','tense','jittery','threatened','vulnerable'],"What if it goes wrong?",[['insecure','unsure of your worth or footing'],['tense','body braced'],['jittery','shaky energy'],['threatened','sensing danger'],['vulnerable','exposed to harm'],['restless','can’t settle'],['dreading','fearing what’s coming'],['overthinking','thoughts on a loop']],['safety','support','grounding'],'Breathe out for longer than you breathe in.'],
+ ['Panicked',['terrified','petrified','dread','frantic','overwhelmed','trapped'],"I need to get out of here!",[['terrified','intense fear'],['petrified','frozen with fear'],['frantic','desperate and rushed'],['overwhelmed','more than you can hold'],['trapped','no way out'],['alarmed','a sudden sense of danger'],['horrified','shocked by something awful'],['helpless','unable to act']],['safety','help','grounding'],'Feet on the floor. Name five things you see. Reach out to someone.']]},
+{id:'angry',name:'Angry',a:'#D23B33',msg:'A boundary or value got crossed.',tiers:[
+ ['Annoyed',['irritated','irked','impatient','grouchy','cranky','skeptical'],"Ugh, that's bugging me.",[['irritated','a small, rubbing frustration'],['irked','mildly bothered'],['impatient','wanting it faster'],['grouchy','short-tempered'],['cranky','irritable, often when tired'],['skeptical','doubting motives'],['bothered','something’s off'],['exasperated','patience worn thin']],['ease','respect','rest'],'Ask: is this about this, or about something else?'],
+ ['Frustrated',['resentful','bitter','defensive','indignant','jealous','envious'],"This isn't fair, or this isn't working.",[['resentful','an old hurt still burning'],['bitter','soured by repeated hurt'],['defensive','guarding against attack'],['indignant','a fairness line got crossed'],['jealous','afraid of losing someone'],['envious','wanting what another has'],['aggravated','pressure building'],['blocked','something is in your way']],['fairness','respect','progress'],'Name the boundary or value that got crossed.'],
+ ['Furious',['enraged','livid','seething','outraged','betrayed','hostile'],"This is not okay.",[['enraged','overwhelming anger'],['livid','shaking with anger'],['seething','boiling just under the surface'],['outraged','a moral offense'],['betrayed','trust was broken'],['hostile','wanting to push back hard'],['vengeful','wanting them to hurt too'],['incensed','fiercely provoked']],['safety','justice','being heard'],'Pause before acting. Move your body first.']]},
+{id:'ashamed',name:'Ashamed',a:'#4F9E3F',msg:'You want to belong and be okay.',tiers:[
+ ['Awkward',['embarrassed','self-conscious','shy','foolish','exposed','judged'],"Did I just do that?",[['embarrassed','exposed in a small way'],['self-conscious','watching yourself too closely'],['shy','hesitant to be seen'],['foolish','feeling silly'],['exposed','seen when you didn’t want to be'],['judged','feeling evaluated'],['flustered','rattled and red-faced'],['sheepish','mildly embarrassed by a slip']],['acceptance','ease','privacy'],'Remember most people are busy thinking about themselves.'],
+ ['Guilty',['regretful','remorseful','sorry','inadequate','not enough','invisible'],"I did something wrong.",[['regretful','wishing it had gone differently'],['remorseful','deeply sorry for harm done'],['sorry','wanting to make amends'],['inadequate','not measuring up'],['not enough','falling short of worthy'],['invisible','unseen, overlooked'],['responsible','owning your part'],['contrite','ready to repair']],['repair','forgiveness','integrity'],'Guilt is about an action. Ask what repair would look like.'],
+ ['Humiliated',['mortified','worthless','disgusted','repulsed','unlovable','small'],"Something is wrong with me.",[['mortified','deeply embarrassed'],['worthless','feeling of no value'],['disgusted','repelled, maybe at yourself'],['repulsed','strong aversion'],['unlovable','believing no one could love you'],['small','shrunk down'],['disgraced','lost standing'],['defective','feeling broken at the core']],['compassion','belonging','dignity'],'Shame shrinks when it is spoken to someone safe.']]}
+];
+
+FACES.hopeful='<path d="M17 22q5-5 10-2"/><path d="M47 22q-5-5-10-2"/><path d="M19 30q4-5 8 0"/><path d="M37 30q4-5 8 0"/><path d="M22 41q10 8 20 0"/>';
+FACES.surprised='<path d="M16 17q6-6 12-1"/><path d="M48 17q-6-6-12-1"/><circle cx="22" cy="28" r="2.5"/><circle cx="42" cy="28" r="2.5"/><circle cx="32" cy="44" r="5.5"/>';
+D.push(
+{id:'hopeful',name:'Hopeful',a:'#8E7CE6',msg:'Something good could happen. Move toward it.',tiers:[
+ ['Encouraged',['optimistic','encouraged','open','reassured','trusting','patient'],"Maybe this could work out.",[['hopeful','sensing a good outcome is possible'],['optimistic','expecting things to turn out well'],['encouraged','given a little heart'],['open','willing to see what happens'],['reassured','a worry eased by something'],['trusting','leaning on how things tend to go'],['patient','willing to wait for it'],['faithful','believing without proof yet']],['possibility','support','patience'],'Name one small step toward what you hope for.'],
+ ['Eager',['excited','looking forward','ready','enthusiastic','keen','inspired'],"I can't wait.",[['eager','keen to begin'],['excited','lit up about what’s coming'],['looking forward','pleasant anticipation'],['ready','prepared and willing'],['enthusiastic','full of energy for it'],['keen','sharp, focused interest'],['inspired','lit up by a possibility'],['restless','energy with nowhere to go yet']],['purpose','momentum','sharing'],'Tell someone what you’re looking forward to.'],
+ ['Thrilled',['thrilled','fired up','raring to go','expectant','dreaming big','electrified'],"This is going to be amazing!",[['thrilled','a rush of excitement'],['fired up','ready to charge ahead'],['raring to go','can barely hold back'],['expectant','sure something big is near'],['dreaming big','imagining the best version'],['electrified','charged with possibility'],['visionary','seeing what could be'],['on the edge of your seat','thrilling suspense']],['expression','direction','grounding'],'Write the dream down, then pick the first piece.']]},
+{id:'surprised',name:'Surprised',a:'#9FC23A',msg:'Something unexpected. Take it in.',tiers:[
+ ['Taken aback',['surprised','intrigued','curious','puzzled','caught off guard','bemused'],"Huh, I didn't see that coming.",[['surprised','something unexpected happened'],['intrigued','wanting to know more'],['curious','drawn to explore'],['puzzled','trying to make it fit'],['caught off guard','not ready for it'],['bemused','a little confused, a little amused'],['jolted','a small shake'],['perplexed','it doesn’t add up yet']],['information','time','curiosity'],'Pause and ask: what just changed?'],
+ ['Startled',['startled','amazed','astonished','rattled','jumpy','speechless'],"Whoa!",[['startled','a sudden jump'],['amazed','wonder at the unexpected'],['astonished','surprise mixed with disbelief'],['rattled','shaken up'],['jumpy','on alert after a shock'],['speechless','no words yet'],['dumbfounded','mind gone blank'],['awed','struck by something vast']],['orientation','safety','wonder'],'Take a breath before deciding if this is good or bad.'],
+ ['Shocked',['shocked','stunned','floored','awestruck','blindsided','disbelieving'],"I can't believe this is happening.",[['shocked','hit hard by the unexpected'],['stunned','frozen for a moment'],['floored','knocked off your feet'],['awestruck','overwhelmed by wonder'],['blindsided','hit from where you weren’t looking'],['disbelieving','it doesn’t feel real'],['thunderstruck','sudden, total surprise'],['dazed','slow to come back']],['grounding','support','time'],'Let it land. You don’t need to respond yet.']]}
+);
+// Pleasant families first, Surprised in the middle (it can tip either way), unpleasant last.
+const ORDER=['joy','loving','peaceful','hopeful','strong','surprised','confused','tired','sad','afraid','angry','ashamed'];
+D.sort((a,b)=>ORDER.indexOf(a.id)-ORDER.indexOf(b.id));
+
+// Pleasant groups first, then unpleasant from most activated to most shut down. BODY.split marks where unpleasant starts.
+const BODY={id:'body',name:'Body',a:'#8A8377',msg:'Feelings show up here first. Where is it?',split:3,tiers:[
+ ['Open',['light','spacious','expansive','loose','warm','relaxed'],"There's room in me.",[['light','weight lifted'],['spacious','room to breathe'],['expansive','chest wide open'],['loose','muscles soft'],['warm','heat spreading kindly'],['tingling','alive at the edges'],['buoyant','lifted and floaty'],['easy breath','breathing on its own']],['Joy','Peaceful','Loving'],'Notice where it lives so you can find it again.'],
+ ['Alive',['energized','awake','vibrant','bubbly','strong','alert'],"I'm ready to move.",[['energized','fuel in the tank'],['awake','senses switched on'],['vibrant','humming with life'],['bubbly','a fizzy lightness in the chest'],['strong','power in the muscles'],['alert','sharp and attentive'],['flushed','a pleasant warmth in the face'],['charged','a hum of readiness']],['Strong','Joy','Loving'],'Use it: walk, dance, or start the thing.'],
+ ['Settled',['grounded','rooted','still','soft','melting','sleepy'],"I can let go now.",[['grounded','weight sinking into the floor'],['rooted','steady from the feet up'],['still','no urge to move'],['soft','belly and shoulders unclenched'],['melting','tension draining away'],['sleepy','a pleasant pull toward rest'],['heavy-limbed','arms and legs comfortably heavy'],['slow breath','long, easy exhales']],['Peaceful','Loving','Tired'],'Let the surface under you take all your weight.'],
+ ['Revved',['jittery','pounding','shaky','racing','sweaty','fidgety'],"There's too much energy in me.",[['jittery','fine, fast trembling'],['pounding','heart thumping'],['shaky','hands or legs unsteady'],['racing','heart or thoughts speeding'],['sweaty','skin dampening'],['fidgety','can’t keep still'],['wired','alert but frayed'],['short of breath','breathing high and quick']],['Afraid','Angry','Confused'],'Shake it out: hands, arms and legs for thirty seconds.'],
+ ['Hot',['burning','flushed','prickly','itchy','throbbing','pressure'],"It's building up in me.",[['burning','heat in the chest or face'],['flushed','blood rushing to the face'],['prickly','skin on edge'],['itchy','irritation under the skin'],['throbbing','pulsing pressure'],['pressure','something pushing to get out'],['red-faced','the heat is showing'],['boiling','heat rising fast']],['Angry','Ashamed','Afraid'],'Cool water on your wrists or face, then a long exhale.'],
+ ['Tight',['tense','knotted','clenched','constricted','stiff','braced'],"Something in me is bracing.",[['tense','muscles held ready'],['knotted','a twist in the gut or chest'],['clenched','jaw or fists held tight'],['constricted','less room to breathe'],['stiff','hard to move freely'],['cramping','a sharp squeeze'],['braced','ready for impact'],['tight-chested','pressure around the heart']],['Afraid','Angry','Tired'],'Find the tightest spot and breathe into it for three breaths.'],
+ ['Churning',['queasy','butterflies','churning','sinking','nauseous','bloated'],"Something doesn't sit right.",[['queasy','unsettled stomach'],['butterflies','fluttery nerves'],['churning','stomach turning over'],['sinking','a dropping feeling in the gut'],['nauseous','close to sick'],['lump in throat','hard to swallow or speak'],['pit in stomach','a hollow dread'],['bloated','full and uncomfortable']],['Afraid','Sad','Ashamed'],'Put a hand on your belly and breathe slowly into it.'],
+ ['Heavy',['drained','dull','sluggish','achy','sore','weak'],"Everything takes more effort.",[['drained','energy leaked away'],['dull','senses muffled'],['sluggish','slow and thick'],['achy','a low, spread-out pain'],['sore','tender to touch'],['slumped','posture caving in'],['weighed down','pressure from above'],['weak','strength missing']],['Sad','Tired','Ashamed'],'Lie down or lean against something and let it hold you.'],
+ ['Shut down',['numb','cold','hollow','frozen','empty','far away'],"I'm not really here.",[['numb','sensation turned off'],['cold','warmth withdrawn'],['hollow','an empty space inside'],['frozen','can’t move or respond'],['empty','nothing there'],['far away','watching from a distance'],['foggy','blurry and slow'],['disconnected','body and mind apart']],['Tired','Sad','Afraid'],'Warm your hands and press your feet into the floor.']]};
+const ALL=[...D,BODY];
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const wide=()=>matchMedia('(min-width:820px)').matches;
+const calm=()=>matchMedia('(prefers-reduced-motion:reduce)').matches;
+const CHEV='<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+let openFam='joy';
+let cur={f:'joy',t:0,w:null};
+
+function dots(n){return `<span class="dots" aria-label="${['mild','medium','intense'][n-1]}">${[1,2,3].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</span>`}
+
+function renderFaces(){
+  $('#faces').innerHTML=ALL.map(f=>`<button class="fbtn ${openFam===f.id?'on':''}" data-jump="${f.id}" aria-label="${f.name}">${face(f.id,f.a)}<span>${f.name}</span></button>`).join('');
+}
+function renderFams(){
+  $('#fams').innerHTML=ALL.map(f=>{
+    const open=openFam===f.id, body=f.id==='body';
+    return `<article class="fam ${open?'open':''}" style="--a:${f.a}">
+      <button class="fhead" id="h-${f.id}" data-toggle="${f.id}" aria-expanded="${open}" aria-controls="d-${f.id}">
+        ${face(f.id,f.a)}<span><span class="fname">${f.name}</span><span class="fmsg">${f.msg}</span></span>${CHEV}
+      </button>
+      <div class="drawer" id="d-${f.id}" ${open?'':'hidden'}>
+        ${f.tiers.map((t,ti)=>`${body&&ti===0?'<p class="blab">Pleasant</p>':''}${body&&ti===f.split?'<p class="blab">Unpleasant</p>':''}<div class="sub">
+          <button class="sname ${!cur.w&&cur.f===f.id&&cur.t===ti?'sel':''}" data-f="${f.id}" data-t="${ti}">${t[0]}${body?'':dots(ti+1)}</button>
+          <div class="words">${t[1].map(w=>`<button class="w ${cur.f===f.id&&cur.t===ti&&cur.w===w?'sel':''}" data-f="${f.id}" data-t="${ti}" data-w="${esc(w)}">${esc(w)}</button>`).join('')}</div>
+        </div>`).join('')}
+      </div>
+    </article>`}).join('');
+}
+function renderList(){renderFaces();renderFams()}
+
+function glossFor(t,w){const d=t[3].find(x=>x[0]===w);return d?d[1]:null}
+function renderDetail(){
+  const f=ALL.find(x=>x.id===cur.f), t=f.tiers[cur.t], body=f.id==='body';
+  const word=cur.w||t[0], g=cur.w?glossFor(t,cur.w):null;
+  const el=$('#detail'); el.style.setProperty('--a',f.a);
+  el.innerHTML=`<span class="grab" aria-hidden="true"></span>
+  <div class="dhead">
+    <div class="crumb"><span>${face(f.id,f.a)}${f.name} › ${t[0]} ${body?'':dots(cur.t+1)}</span><button class="close" id="close">Done</button></div>
+    <h2>${esc(word)}</h2>
+    <p class="gloss">${esc(g?g.charAt(0).toUpperCase()+g.slice(1)+'.':f.msg)}</p>
+    <div class="logbox" id="logbox"></div>
+  </div>
+  <div class="dbody">
+    <p class="voice">${esc(t[2])}</p>
+    <div class="sec"><h3>${body?'More precise sensations':'More specific'}</h3>
+      <div class="dl">${t[3].map(([w,gl])=>`<button class="dw ${w===cur.w?'sel':''}" data-dw="${esc(w)}"><b>${esc(w)}</b><span>${esc(gl)}</span></button>`).join('')}</div>
+    </div>
+    <div class="sec"><h3>${body?'Often shows up with':'It may be asking for'}</h3>
+      ${body?`<div class="nav">${t[4].map(n=>{const x=D.find(y=>y.name===n);return `<button data-open="${x.id}" style="--k:color-mix(in srgb,${x.a} 36%,var(--mix))">${n}</button>`}).join('')}</div>`
+        :`<p class="needs">${t[4].map(esc).join(' · ')}</p>`}
+    </div>
+    <div class="sec"><h3>Try</h3><p class="try">${esc(t[5])}</p></div>
+    <div class="sec"><h3>${body?'Other sensations':'Same family'}</h3>
+      <div class="nav">${f.tiers.map((x,i)=>i===cur.t?'':`<button data-f="${f.id}" data-t="${i}">${x[0]} ${body?'':dots(i+1)}</button>`).join('')}</div>
+    </div>
+  </div>`;
+  renderLogBox();
+}
+
+function show(f,t,w,push=true){
+  cur={f,t:+t,w:w||null};
+  renderDetail(); renderFams();
+  $('#detail').scrollTop=0;
+  if(!wide()){
+    if(!$('#app').classList.contains('open')&&push){try{history.pushState({sheet:1},'')}catch(e){}}
+    $('#app').classList.add('open');
+  }
+}
+function hide(){$('#app').classList.remove('open')}
+function closeSheet(){try{if(history.state&&history.state.sheet){history.back();return}}catch(e){} hide()}
+
+function jump(id){
+  openFam=id; renderList();
+  // Scroll each container directly. Two scrollIntoView calls in a row let the
+  // second cancel the first on iOS Safari, so the drawer never came into view.
+  requestAnimationFrame(()=>{
+    const behavior=calm()?'auto':'smooth';
+    const h=document.getElementById('h-'+id), list=$('#list'), faces=$('#faces');
+    if(h){
+      const listScrolls=list.scrollHeight>list.clientHeight+1;
+      if(listScrolls){
+        const y=h.getBoundingClientRect().top-list.getBoundingClientRect().top+list.scrollTop-faces.offsetHeight;
+        list.scrollTo({top:Math.max(0,y),behavior});
+      }else{
+        const y=h.getBoundingClientRect().top+window.scrollY-faces.offsetHeight;
+        window.scrollTo({top:Math.max(0,y),behavior});
+      }
+    }
+    const fb=faces.querySelector(`.fbtn[data-jump="${id}"]`);
+    if(fb) faces.scrollTo({left:fb.offsetLeft-(faces.clientWidth-fb.offsetWidth)/2,behavior});
+  });
+}
+
+document.addEventListener('click',e=>{
+  if(e.target.id==='scrim'){closeSheet();return}
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.id==='close'){closeSheet();return}
+  if(b.dataset.jump){ if($('#q').value){$('#q').value='';runSearch()} jump(b.dataset.jump); return }
+  if(b.dataset.toggle){ const id=b.dataset.toggle; if(openFam===id){openFam=null;renderList()} else jump(id); return }
+  if(b.dataset.open){ show(b.dataset.open,0,null,false); return }
+  if(b.dataset.dw!==undefined){ cur.w=b.dataset.dw; renderDetail(); renderFams(); return }
+  if(b.dataset.f){ if(b.closest('.results')){openFam=b.dataset.f;renderFaces()} show(b.dataset.f,b.dataset.t,b.dataset.w||null) }
+});
+addEventListener('popstate',hide);
+addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#app').classList.contains('open'))closeSheet()});
+addEventListener('resize',()=>{if(wide())hide()});
+
+// search across subgroup names, list words and deeper words
+const INDEX=[];
+ALL.forEach(f=>f.tiers.forEach((t,ti)=>{
+  const seen=new Set();
+  [[t[0].toLowerCase(),true],...t[1].map(w=>[w,false]),...t[3].map(x=>[x[0],false])].forEach(([w,isName])=>{
+    if(!seen.has(w)){seen.add(w);INDEX.push({w,isName,f,ti,t})}});
+}));
+function runSearch(){
+  const q=$('#q').value.trim().toLowerCase(), r=$('#results'), fams=$('#fams');
+  if(!q){r.hidden=true;fams.hidden=false;return}
+  const hits=INDEX.filter(x=>x.w.includes(q)).sort((a,b)=>(a.w.indexOf(q)-b.w.indexOf(q))||a.w.length-b.w.length).slice(0,40);
+  fams.hidden=true;r.hidden=false;
+  r.innerHTML=hits.length?hits.map(h=>`<button class="res" style="--a:${h.f.a}" data-f="${h.f.id}" data-t="${h.ti}" ${h.isName?'':`data-w="${esc(h.w)}"`}><b>${esc(h.isName?h.t[0]:h.w)}</b><small>${h.f.name} › ${h.t[0]}</small></button>`).join('')
+    :`<p class="empty">No match for “${esc(q)}”. Try a simpler word, like sad, mad or tired.</p>`;
+}
+$('#q').addEventListener('input',runSearch);
+
+// deep link: #sad or #sad-hurt
+function fromHash(){
+  const h=(location.hash||'').slice(1).toLowerCase(); if(!h) return;
+  const [fid,tn]=h.split('-'); const f=ALL.find(x=>x.id===fid); if(!f) return;
+  const ti=f.tiers.findIndex(t=>t[0].toLowerCase().replace(/\s/g,'')===(tn||''));
+  openFam=f.id; renderList();
+  if(ti>=0) show(f.id,ti,null,false); else jump(f.id);
+}
+
+// ---------- storage (per device; every read and write may fail in private modes) ----------
+const store={
+  get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
+};
+
+// ---------- theme ----------
+function applyTheme(choice){
+  const root=document.documentElement;
+  if(choice==='light'||choice==='dark') root.setAttribute('data-theme',choice);
+  else if(choice==='system') root.removeAttribute('data-theme');
+  document.querySelectorAll('[data-theme-choice]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.themeChoice===choice)));
+}
+const savedTheme=store.get('feelings-theme',null);
+if(savedTheme) applyTheme(savedTheme);
+
+// ---------- log ----------
+const LOG_KEY='feelings-log-v1';
+let logEntries=store.get(LOG_KEY,[]);
+if(!Array.isArray(logEntries)) logEntries=[];
+const saveLog=()=>{const ok=store.set(LOG_KEY,logEntries);updateBadge();return ok};
+function updateBadge(){const b=$('#log-count');b.textContent=logEntries.length>99?'99+':logEntries.length;b.hidden=!logEntries.length}
+const fmtTime=ts=>new Date(ts).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+function dayLabel(ts){
+  const d=new Date(ts), t=new Date(); const k=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime();
+  const diff=Math.round((k(t)-k(d))/864e5);
+  if(diff===0) return 'Today'; if(diff===1) return 'Yesterday';
+  return d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'});
+}
+function entryInfo(e){const f=ALL.find(x=>x.id===e.f);const t=f&&f.tiers[e.t];return f&&t?{f,t}:null}
+
+function renderLogBox(state){
+  const box=$('#logbox'); if(!box) return;
+  const word=cur.w||ALL.find(x=>x.id===cur.f).tiers[cur.t][0];
+  if(state==='form'){
+    box.innerHTML=`<label for="log-note" class="logged" style="font-weight:600">Log “${esc(word)}”</label>
+      <textarea id="log-note" placeholder="What's going on? (optional)"></textarea>
+      <div class="logrow"><button class="logbtn" id="log-save">Save to log</button><button class="ghost" id="log-cancel">Cancel</button></div>`;
+    $('#log-note').focus();
+  }else if(state&&state.saved){
+    box.innerHTML=`<p class="logged">Logged at ${fmtTime(state.saved)}${state.ok?'':' (could not save on this device)'} · <button id="log-view">View log</button></p>`;
+  }else{
+    box.innerHTML=`<button class="logbtn" id="log-start"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Log this feeling</button>`;
+  }
+}
+
+function renderLog(){
+  const body=$('#log-body');
+  if(!logEntries.length){
+    body.innerHTML=`<p class="lempty">Nothing logged yet. Open any feeling and tap <b>Log this feeling</b>. Over time you'll see which families show up most.</p>`;
+    return;
+  }
+  const weekAgo=Date.now()-7*864e5, counts={};
+  logEntries.filter(e=>e.ts>=weekAgo).forEach(e=>{counts[e.f]=(counts[e.f]||0)+1});
+  const rows=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const max=rows.length?rows[0][1]:1;
+  const sum=rows.length?`<div class="lsum"><h3>Last 7 days</h3>${rows.map(([fid,n])=>{const f=ALL.find(x=>x.id===fid);if(!f)return'';return `<div class="bar" style="--a:${f.a}"><span>${f.name}</span><span class="track"><i style="width:${Math.max(6,n/max*100)}%"></i></span><span class="n">${n}</span></div>`}).join('')}</div>`:'';
+  const sorted=[...logEntries].sort((a,b)=>b.ts-a.ts);
+  let html=sum, lastDay=null;
+  sorted.forEach(e=>{
+    const info=entryInfo(e); if(!info) return;
+    const day=dayLabel(e.ts);
+    if(day!==lastDay){ if(lastDay!==null) html+='</div>'; html+=`<div class="lday"><h3>${day}</h3>`; lastDay=day }
+    html+=`<div class="entry" style="--a:${info.f.a}"><span class="pip" aria-hidden="true"></span>
+      <div class="main"><button class="ew" data-f="${e.f}" data-t="${e.t}" ${e.w?`data-w="${esc(e.w)}"`:''}>${esc(e.w||info.t[0])}</button>
+      <span class="em">${info.f.name} › ${info.t[0]} · ${fmtTime(e.ts)}</span>${e.note?`<p class="en">${esc(e.note)}</p>`:''}</div>
+      <button class="rm" data-rm="${e.ts}">Remove</button></div>`;
+  });
+  if(lastDay!==null) html+='</div>';
+  body.innerHTML=html;
+}
+
+function logAsText(){
+  return [...logEntries].sort((a,b)=>a.ts-b.ts).map(e=>{
+    const i=entryInfo(e); if(!i) return '';
+    const d=new Date(e.ts).toLocaleString([],{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+    return `${d} · ${e.w||i.t[0]} (${i.f.name} › ${i.t[0]})${e.note?' · '+e.note:''}`;
+  }).filter(Boolean).join('\n');
+}
+
+// ---------- dialogs ----------
+function openDialog(d){try{d.showModal()}catch(e){d.setAttribute('open','')}}
+document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d)d.close()}));
+
+let clearArmed=false;
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.hasAttribute('data-close')){b.closest('dialog').close();return}
+  if(b.id==='open-settings'){clearArmed=false;$('#clear-log').textContent='Clear log';$('#log-msg').textContent='';$('#log-fallback').hidden=true;openDialog($('#settings'));return}
+  if(b.id==='open-log'||b.id==='log-view'){renderLog();openDialog($('#logd'));return}
+  if(b.dataset.themeChoice){applyTheme(b.dataset.themeChoice);store.set('feelings-theme',b.dataset.themeChoice);return}
+  if(b.id==='log-start'){renderLogBox('form');return}
+  if(b.id==='log-cancel'){renderLogBox();return}
+  if(b.id==='log-save'){
+    const note=($('#log-note').value||'').trim().slice(0,500), ts=Date.now();
+    logEntries.push({ts,f:cur.f,t:cur.t,w:cur.w,note});
+    renderLogBox({saved:ts,ok:saveLog()});return;
+  }
+  if(b.dataset.rm){
+    if(b.classList.contains('armed')){logEntries=logEntries.filter(x=>String(x.ts)!==b.dataset.rm);saveLog();renderLog()}
+    else{document.querySelectorAll('.rm.armed').forEach(x=>{x.classList.remove('armed');x.textContent='Remove'});b.classList.add('armed');b.textContent='Tap to remove'}
+    return;
+  }
+  if(b.id==='copy-log'){
+    const text=logAsText();
+    if(!text){$('#log-msg').textContent='Your log is empty.';return}
+    const fallback=()=>{const ta=$('#log-fallback');ta.value=text;ta.hidden=false;ta.select();$('#log-msg').textContent='Copy the text below.'};
+    try{navigator.clipboard.writeText(text).then(()=>{$('#log-msg').textContent=`Copied ${logEntries.length} entries.`},fallback)}catch(err){fallback()}
+    return;
+  }
+  if(b.id==='clear-log'){
+    if(!logEntries.length){$('#log-msg').textContent='Your log is already empty.';return}
+    if(!clearArmed){clearArmed=true;b.textContent='Tap again to clear everything';return}
+    logEntries=[];saveLog();clearArmed=false;b.textContent='Clear log';$('#log-msg').textContent='Log cleared.';return;
+  }
+},true);
+
+// a log entry opens its feeling: close the log first
+document.addEventListener('click',e=>{const b=e.target.closest('.entry .ew');if(b)$('#logd').close()},true);
+
+// ---------- offline (GitHub version; quietly does nothing where service workers are unavailable) ----------
+if('serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}}
+
+renderList(); renderDetail(); updateBadge(); fromHash();
+</script>
+
+</body>
+</html>

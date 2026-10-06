@@ -1,0 +1,21 @@
+# macOS Finder metadata – appears in any folder opened in Finder and is
+# meaningless to everyone else.
+.DS_Store
+._*
+
+# Editor and tooling state. None of these is used by the project today;
+# listed so a stray IDE launch never lands in the public repo.
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local Claude Code settings (permission allowlists, per-machine). Shared
+# project rules live in CLAUDE.md, which stays tracked.
+.claude/settings.local.json
+
+# Scratch output. The app has no build step, so anything in these folders
+# is a local experiment, never a deliverable.
+tmp/
+scratch/
+*.log

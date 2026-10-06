@@ -14,8 +14,9 @@
 # project rules live in CLAUDE.md, which stays tracked.
 .claude/settings.local.json
 
-# Scratch output. The app has no build step, so anything in these folders
-# is a local experiment, never a deliverable.
-tmp/
-scratch/
+# Session scratch and the handoff note. HANDOFF.md is per-session working
+# state that the SessionStart hook reads from here; it is noise to anyone
+# else and would churn the public history every session. The app has no
+# build step, so nothing else in here can be a deliverable either.
+_working/
 *.log

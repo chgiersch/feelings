@@ -15,9 +15,13 @@ with git history intact.
   emotional content.
 - Plain static stack: index.html + sw.js + manifest. Keep it dependency-free;
   no build step unless the project genuinely outgrows one.
-- Chris approves every commit. Deploy target undecided (GitHub Pages is the
-  obvious candidate when he wants it on his phone via URL instead of
-  local install).
+- Chris approves every commit. Deployed on GitHub Pages from the `main`
+  branch root at https://chgiersch.github.io/feelings/ – GitFlow from here:
+  features off `dev`, releases merge to `main`.
+- Any change to index.html must bump `VERSION` in sw.js, or installed
+  phones keep serving the old copy from the service worker cache.
+- HANDOFF.md lives in gitignored `_working/`, not the root – it is session
+  state, not something the public repo should carry.
 
 ## Session protocol
 

@@ -44,3 +44,7 @@ Inspired by Abby VanMuijen's feelings wheel (@avanmuijen) and the feelings lists
 ## Hosting
 
 Served by GitHub Pages from the `main` branch root.
+
+## License
+
+[MIT](LICENSE), covering the code and the feeling words and meanings alike. Fork it, adapt it, make your own version; keep the notice.
